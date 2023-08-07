@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CsvFileReader = void 0;
 const fs_1 = __importDefault(require("fs"));
+const Papa = require('papaparse');
 class CsvFileReader {
     constructor(filename) {
         this.filename = filename;
@@ -27,6 +28,7 @@ class CsvFileReader {
             return row.split(',');
         })
             .map((row) => {
+            // console.log(row)
             let parse = row[2].split('\r');
             return [
                 parseInt(row[0]),
@@ -36,29 +38,17 @@ class CsvFileReader {
         });
     }
     readBase() {
-        this.dataNew = fs_1.default.readFileSync(this.filename, {
-            encoding: 'utf-8'
-        })
-            .split('\n')
-            .map((row) => {
-            return row.split(',');
-        })
-            .map((row) => {
-            let parse = row[1].split('\r');
-            return [
-                parseInt(row[0]),
-                parse[0]
-            ];
-        });
-    }
-    compare() {
-        this.dataNew.forEach(newRow => {
-            this.data.forEach((curRow) => {
-                console.log(curRow);
-                console.log('in here');
-                // if (newRow[0] === curRow[0]) {
-                //   console.log(`adding ${newRow}`)
-                // }
+        return new Promise((resolve, reject) => {
+            fs_1.default.readFile(this.filename, 'utf8', (err, data) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                const results = Papa.parse(data, { header: false }).data;
+                const returnData = results.map((row) => {
+                    return [parseInt(row[0]), row[1], parseFloat(row[2])];
+                });
+                resolve(returnData);
             });
         });
     }

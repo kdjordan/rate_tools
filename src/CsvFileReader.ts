@@ -1,12 +1,11 @@
 import fs from 'fs'
 // import { dateStringToDate } from './utils'
 import { MatchResult } from './MatchResult'
-
-type MatchData = [Date, string, string, number, number, MatchResult, string]
+const Papa = require('papaparse');
 
 export class CsvFileReader {
   data: string[][] = []
-  dataNew: string[][] = []
+  dataNew: any[][] = []
   newList: string[][] = []
 
   constructor(public filename: string) {}
@@ -28,6 +27,7 @@ export class CsvFileReader {
       return row.split(',')
     })
     .map((row: string[]): any => {
+      // console.log(row)
       let parse = row[2].split('\r')
       return [
         parseInt(row[0]),
@@ -35,35 +35,23 @@ export class CsvFileReader {
         parseFloat(parse[0])
       ]
     })
-  
   }
   
-  readBase(): void {
-    this.dataNew = fs.readFileSync(this.filename, {
-      encoding: 'utf-8'
-    })
-    .split('\n')
-    .map((row: string): string[] => {
-      return row.split(',')
-    })
-    .map((row: string[]): any => {
-      let parse = row[1].split('\r')
-      return [
-        parseInt(row[0]),
-        parse[0]
-      ]
-    })
-  }
-  compare(): any {
-    this.dataNew.forEach(newRow => {
-      this.data.forEach((curRow) => {
-        console.log(curRow)
-        console.log('in here')
-        // if (newRow[0] === curRow[0]) {
-        //   console.log(`adding ${newRow}`)
-        // }
-      })
-    })
-      
+  readBase(): Promise<any[][]> {
+    return new Promise((resolve, reject) => {
+      fs.readFile(this.filename, 'utf8', (err, data) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        const results = Papa.parse(data, { header: false }).data;
+        const returnData = results.map((row: any[]) => {
+          return [parseInt(row[0]), row[1], parseFloat(row[2])];
+        });
+
+        resolve(returnData);
+      });
+    });
   }
 }

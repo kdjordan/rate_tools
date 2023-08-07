@@ -1,28 +1,26 @@
 import { CsvFileReader } from "./CsvFileReader";
-import { getUpdateList, getNewCodeList, makeCsv } from "./utils";
+import { getCodeLists, makeCsv } from "./utils";
 
+// let baseList = new Array()
+// let newList = new Array()
 
-const baseCodes = new CsvFileReader('DEMO_BASE_CODES.csv')
-baseCodes.read()
-const baseList = baseCodes.getData()
-// console.log(baseList)
+async function processCsvData(filename1: string, filename2: string) {
+  const csvFileReader1 = new CsvFileReader(filename1);
+  const csvFileReader2 = new CsvFileReader(filename2);
+  let flag = true
+  try {
+    const data1 = await csvFileReader1.readBase();
+    const data2 = await csvFileReader2.readBase();
+    // console.log('**', data1);
+    if(flag) {
+      const [newCodeList, matchedCodeList] = getCodeLists(data1, data2)
+      makeCsv('new', newCodeList)
+      makeCsv('matches', matchedCodeList)
+    }
+  } catch (error) {
+    console.error('Error reading CSV file:', error);
+  }
+}
 
-// console.log(baseCodes.data)
+processCsvData('CURRENT_CODES.CSV', 'NEW_CODES.csv');
 
-const newCodes = new CsvFileReader('DEMO_NEW_CODES.csv')
-newCodes.readBase()
-const newList = newCodes.getNewData()
-// console.log(newList)
-
-// let updateCodeList = getUpdateList(baseList, newList)
-let newCodeList = getNewCodeList(baseList, newList)
-// console.log(updateCodeList)
-
-console.log(newCodeList)
-makeCsv(newCodeList)
-// let deltaList = compareLists([[222, 'test2', .088], [333, 'test3', .08]], [[222, 'testReplace']])
-
-// newCodes.compare()
-// newCodes.compare()
-// console.log(newCodes.dataNew)
-// const newCodes = new CsvFileReader('NEW_CODES.csv')
