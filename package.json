@@ -1,0 +1,20 @@
+{
+  "name": "10-sort",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:build": "tsc -w",
+    "start:run": "nodemon build/index.js",
+    "start": "concurrently npm:start:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.4.8",
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.1",
+    "papaparse": "^5.4.1"
+  }
+}
