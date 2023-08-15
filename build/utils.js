@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeCsv = exports.getCodeLists = void 0;
+exports.makeCsv = exports.getNewNames = exports.getCodeLists = void 0;
 const Papa = require('papaparse');
 const fs_1 = __importDefault(require("fs"));
 const { v4: uuidv4 } = require('uuid');
@@ -42,9 +42,27 @@ function getCodeLists(oldList, newList) {
     return [codesToAdd, matchedCodes];
 }
 exports.getCodeLists = getCodeLists;
+function getNewNames(oldList, newList) {
+    let namesToAdd = [];
+    for (const item1 of newList) {
+        const nameToCompare = item1[0];
+        let isFound = false;
+        for (const item2 of oldList) {
+            if (item2[0].includes(nameToCompare)) {
+                isFound = true;
+                break;
+            }
+        }
+        if (!isFound) {
+            namesToAdd.push(item1);
+        }
+    }
+    return namesToAdd;
+}
+exports.getNewNames = getNewNames;
 function makeCsv(type, codeList) {
-    console.log('making csv');
-    let fileName = `${type}-${uuidv4()}`;
+    console.log('making csv', type);
+    let fileName = `${type}-${uuidv4().split('-')[0]}`;
     const csvString = Papa.unparse(codeList);
     console.log(fileName);
     // Write the CSV string to a file

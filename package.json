@@ -17,5 +17,8 @@
     "nodemon": "^3.0.1",
     "papaparse": "^5.4.1",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5.3.7"
   }
 }

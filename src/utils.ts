@@ -40,9 +40,31 @@ export function getCodeLists(oldList: any[][], newList: any[][]) {
   return [codesToAdd, matchedCodes]
 }
 
+export function getNewNames(oldList: any[][], newList: any[][]) {
+  let namesToAdd = []
+  for (const item1 of newList) {
+    const nameToCompare = item1[0];
+    let isFound = false;
+  
+    for (const item2 of oldList) {
+      if (item2[0].includes(nameToCompare)) {
+        isFound = true;
+        break;
+      }
+    }
+  
+    if (!isFound) {
+      namesToAdd.push(item1);
+    }
+  }
+
+  return namesToAdd
+  
+}
+
 export function makeCsv(type: string, codeList: any[][]): void { 
-  console.log('making csv')
-  let fileName = `${type}-${uuidv4()}`
+  console.log('making csv', type)
+  let fileName = `${type}-${uuidv4().split('-')[0]}`
   const csvString = Papa.unparse(codeList);
   console.log(fileName)
   // Write the CSV string to a file

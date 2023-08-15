@@ -1,12 +1,13 @@
 import fs from 'fs'
 // import { dateStringToDate } from './utils'
-import { MatchResult } from './MatchResult'
-const Papa = require('papaparse');
+import Papa from 'papaparse';
 
 export class CsvFileReader {
   data: string[][] = []
   dataNew: any[][] = []
   newList: string[][] = []
+  newNames: string[][] = []
+  oldNames: string[][] = []
 
   constructor(public filename: string) {}
 
@@ -16,6 +17,10 @@ export class CsvFileReader {
 
   getNewData(): any[][] {
     return this.dataNew
+  }
+
+  getOldNames(): any[][] {
+    return this.oldNames
   }
 
   read():void{
@@ -54,4 +59,41 @@ export class CsvFileReader {
       });
     });
   }
+
+  readOldNames(): Promise<any[][]> {
+    return new Promise((resolve, reject) => {
+      fs.readFile(this.filename, 'utf8', (err, data) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        const results = Papa.parse(data, { header: false }).data;
+        const returnData = results.map((row: any) => {
+          return [row[0], row[1]];
+        });
+
+        resolve(returnData);
+      });
+    });
+  }
+  readNewNames(): Promise<any[][]> {
+    return new Promise((resolve, reject) => {
+      fs.readFile(this.filename, 'utf8', (err, data) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        const results = Papa.parse(data, { header: false }).data;
+        const returnData = results.map((row: any) => {
+          return [row[0]];
+        });
+
+        resolve(returnData);
+      });
+    });
+  }
+
+
 }

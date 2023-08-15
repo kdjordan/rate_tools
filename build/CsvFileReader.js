@@ -5,19 +5,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CsvFileReader = void 0;
 const fs_1 = __importDefault(require("fs"));
-const Papa = require('papaparse');
+// import { dateStringToDate } from './utils'
+const papaparse_1 = __importDefault(require("papaparse"));
 class CsvFileReader {
     constructor(filename) {
         this.filename = filename;
         this.data = [];
         this.dataNew = [];
         this.newList = [];
+        this.newNames = [];
+        this.oldNames = [];
     }
     getData() {
         return this.data;
     }
     getNewData() {
         return this.dataNew;
+    }
+    getOldNames() {
+        return this.oldNames;
     }
     read() {
         this.data = fs_1.default.readFileSync(this.filename, {
@@ -44,9 +50,39 @@ class CsvFileReader {
                     reject(err);
                     return;
                 }
-                const results = Papa.parse(data, { header: false }).data;
+                const results = papaparse_1.default.parse(data, { header: false }).data;
                 const returnData = results.map((row) => {
                     return [parseInt(row[0]), row[1], parseFloat(row[2])];
+                });
+                resolve(returnData);
+            });
+        });
+    }
+    readOldNames() {
+        return new Promise((resolve, reject) => {
+            fs_1.default.readFile(this.filename, 'utf8', (err, data) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                const results = papaparse_1.default.parse(data, { header: false }).data;
+                const returnData = results.map((row) => {
+                    return [row[0], row[1]];
+                });
+                resolve(returnData);
+            });
+        });
+    }
+    readNewNames() {
+        return new Promise((resolve, reject) => {
+            fs_1.default.readFile(this.filename, 'utf8', (err, data) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                const results = papaparse_1.default.parse(data, { header: false }).data;
+                const returnData = results.map((row) => {
+                    return [row[0]];
                 });
                 resolve(returnData);
             });
