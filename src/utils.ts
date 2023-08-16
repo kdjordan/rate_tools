@@ -40,29 +40,26 @@ export function getCodeLists(oldList: any[][], newList: any[][]) {
   return [codesToAdd, matchedCodes]
 }
 
-export function getNewNames(newList: any[][], curList: any[][]) {
-  let namesToAdd = []
-  const namesMap = {};
+export function getNewNames(newList: string[][], curList: string[][]) {
 
-  console.log(newList)
-  console.log(curList)
+  const namesToAdd: string[] = [];
 
-for (const curName of curList) {
-  namesMap[curName[0]] = true;
-}
-console.log(namesMap)
-const resultArray = [];
-
-for (const newName of newList) {
-  const nameToCompare = newName[0];
-  
-  if (!namesMap[nameToCompare]) {
-    resultArray.push(newName[0]);
+  // Create a map of current names
+  const curNamesMap = new Map();
+  for (const curName of curList) {
+    curNamesMap.set(curName[0], true); 
   }
-}
 
-console.log('***', resultArray);
-  
+  // Check each new name against current name map
+  for (const newName of newList) {
+    if (!curNamesMap.has(newName[0])) {
+      // If new name not found in current map, add it 
+      namesToAdd.push(newName[0]);
+    }
+  }
+  // console.log('====', namesToAdd)
+  return namesToAdd;
+
 }
 
 export function makeCsv(type: string, codeList: any[][]): void { 

@@ -43,22 +43,21 @@ function getCodeLists(oldList, newList) {
 }
 exports.getCodeLists = getCodeLists;
 function getNewNames(newList, curList) {
-    let namesToAdd = [];
-    const namesMap = {};
-    console.log(newList);
-    console.log(curList);
+    const namesToAdd = [];
+    // Create a map of current names
+    const curNamesMap = new Map();
     for (const curName of curList) {
-        namesMap[curName[0]] = true;
+        curNamesMap.set(curName[0], true);
     }
-    console.log(namesMap);
-    const resultArray = [];
+    // Check each new name against current name map
     for (const newName of newList) {
-        const nameToCompare = newName[0];
-        if (!namesMap[nameToCompare]) {
-            resultArray.push(newName[0]);
+        if (!curNamesMap.has(newName[0])) {
+            // If new name not found in current map, add it 
+            namesToAdd.push(newName[0]);
         }
     }
-    console.log('***', resultArray);
+    // console.log('====', namesToAdd)
+    return namesToAdd;
 }
 exports.getNewNames = getNewNames;
 function makeCsv(type, codeList) {
