@@ -1,15 +1,15 @@
 import { CsvFileReader } from "./CsvFileReader";
 import {  getNewNames, getCodeLists, makeCsv } from "./utils";
-
+import NewNameReturnType from "./utils";
 
 async function processCsvData(filename1: string, filename2: string) {
   const csvFileReader1 = new CsvFileReader(filename1);
   const csvFileReader2 = new CsvFileReader(filename2);
-  let flag = true
+  let flag = false
   // let flag = false
   try {
-    const data1 = await csvFileReader1.readBase();
-    const data2 = await csvFileReader2.readBase();
+    // const data1 = await csvFileReader1.readBase();
+    // const data2 = await csvFileReader2.readBase();
     // console.log('**', data1);
     if(flag) {
       // const [newCodeList, matchedCodeList] = compareDestNames(data1, data2)
@@ -34,10 +34,11 @@ async function processCsvNames(filename1: string, filename2: string) {
     // console.log('new', newNames)
     // console.log('cur', curNames)
     if(flag) {
-      const newNamesList = getNewNames(newNames, curNames)
+
+      const newNamesList: NewNameReturnType[] = await getNewNames(newNames, curNames)
       console.log('add these ', newNamesList)
 
-      makeCsv('test', newNamesList)
+      // makeCsv('test', newNamesList)
     }
   } catch (error) {
     console.error('Error reading CSV file:', error);

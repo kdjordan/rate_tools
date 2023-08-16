@@ -2,6 +2,8 @@ const Papa = require('papaparse');
 import fs from 'fs'
 const { v4: uuidv4 } = require('uuid');
 
+type NewNameReturnType = [string, string, boolean, boolean, boolean]
+
 // export const getUpdateList = (oldList: any[][], newList: any[][]) => {
 //   let updateCodeList = []
   
@@ -40,32 +42,70 @@ export function getCodeLists(oldList: any[][], newList: any[][]) {
   return [codesToAdd, matchedCodes]
 }
 
-export function getNewNames(newList: string[][], curList: string[][]) {
+export function getNewNames(newList: string[][], curList: string[][]): Promise<NewNameReturnType[]> {
 
-  const namesToAdd: string[] = [];
+  const namesToAdd: string[][] = [];
 
-  // Create a map of current names
-  const curNamesMap = new Map();
-  for (const curName of curList) {
-    curNamesMap.set(curName[0], true); 
-  }
+  return new Promise((resolve, reject) => {
 
-  // Check each new name against current name map
-  for (const newName of newList) {
-    if (!curNamesMap.has(newName[0])) {
-      // If new name not found in current map, add it 
-      namesToAdd.push(newName[0]);
+    let namesToAdd: NewNameReturnType[] = [];
+
+    if (!newList || !curList) {
+      reject({status: 500, message: 'Lists not provided'});
+      return
+    }
+
+    for (const newName of newList) {
+      let nameIsInCurList = false    
+    
+      for (const curName of curList) {
+        if(newName[0] === curName[0]) {
+          nameIsInCurList = true;
+          break;
+        }
+      }
+
+      if (!nameIsInCurList) {
+        namesToAdd.push(
+          [
+            newName[0], 
+            newName[0].split(' ')[0], 
+            false, 
+            false, 
+            true
+          ])
+      }
+
+      resolve(namesToAdd);
     }
   }
-  // console.log('====', namesToAdd)
-  return namesToAdd;
 
-}
+  // // Create a map of current names
+  // const curNamesMap = new Map();
+  // for (const curName of curList) {
+  //   curNamesMap.set(curName[0], curName[1]); 
+  // }
+
+  // // Check each new name against current name map
+  // for (const newName of newList) {
+  //   if (!curNamesMap.has(newName[0])) {
+  //     // If new name not found in current map, add it 
+  //     namesToAdd.push([newName[0]]);
+  //   }
+  // }
+  // // console.log('====', namesToAdd)
+  // return namesToAdd;
+
+)}
 
 export function makeCsv(type: string, codeList: any[][]): void { 
-  console.log('making csv', type)
+  console.log('got ', codeList)
   let fileName = `${type}-${uuidv4().split('-')[0]}`
-  const csvString = Papa.unparse(codeList);
+  const csvString = Papa.unparse(codeList, {
+    header: false,
+    newline: '\n'
+  });
+
   console.log(fileName)
   // Write the CSV string to a file
   fs.writeFile(`${fileName}.csv`, csvString, (err) => {

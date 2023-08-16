@@ -13,12 +13,12 @@ export class CsvFileReader {
           reject(err);
           return;
         }
-        const results = Papa.parse(data, {header: false}).data;
+        const results = Papa.parse(data, {header: false}).data as string[][];
   
         let returnData: string[][] = [];
   
         if (type === 'current') {
-          returnData = results.map((row) => {
+          returnData = results.map((row: string[]) => {
             return [row[0], row[1]];
           });
         } else if (type === 'new') {

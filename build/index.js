@@ -5,11 +5,11 @@ const utils_1 = require("./utils");
 async function processCsvData(filename1, filename2) {
     const csvFileReader1 = new CsvFileReader_1.CsvFileReader(filename1);
     const csvFileReader2 = new CsvFileReader_1.CsvFileReader(filename2);
-    let flag = true;
+    let flag = false;
     // let flag = false
     try {
-        const data1 = await csvFileReader1.readBase();
-        const data2 = await csvFileReader2.readBase();
+        // const data1 = await csvFileReader1.readBase();
+        // const data2 = await csvFileReader2.readBase();
         // console.log('**', data1);
         if (flag) {
             // const [newCodeList, matchedCodeList] = compareDestNames(data1, data2)
@@ -33,9 +33,9 @@ async function processCsvNames(filename1, filename2) {
         // console.log('new', newNames)
         // console.log('cur', curNames)
         if (flag) {
-            const newNamesList = (0, utils_1.getNewNames)(newNames, curNames);
+            const newNamesList = await (0, utils_1.getNewNames)(newNames, curNames);
             console.log('add these ', newNamesList);
-            (0, utils_1.makeCsv)('test', newNamesList);
+            // makeCsv('test', newNamesList)
         }
     }
     catch (error) {
