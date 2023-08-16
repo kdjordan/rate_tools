@@ -33,9 +33,9 @@ async function processCsvNames(filename1, filename2) {
         // console.log('new', newNames)
         // console.log('cur', curNames)
         if (flag) {
-            const newNamesList = await (0, utils_1.getNewNames)(newNames, curNames);
+            const newNamesList = await (0, utils_1.getNewNames)(curNames, newNames);
             console.log('add these ', newNamesList);
-            // makeCsv('test', newNamesList)
+            (0, utils_1.makeCsv)('test', newNamesList);
         }
     }
     catch (error) {
@@ -43,5 +43,5 @@ async function processCsvNames(filename1, filename2) {
     }
 }
 // processCsvNames('./CSV/CUR_DEST_NAMES.CSV', './CSV/SINCH_NAMES_ONLY.csv');
-processCsvNames('./CSV/TEST_FILES/SINCH_NAMES_1000.csv', './CSV/TEST_FILES/CUR_DEST_NAMES_1000.csv');
+processCsvNames('./CSV/CUR_DEST_NAMES.csv', './CSV/SINCH_NAMES_ONLY.csv');
 // const newNamesList = getNewNames(array1, array2)

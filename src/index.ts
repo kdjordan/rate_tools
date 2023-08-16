@@ -1,6 +1,6 @@
 import { CsvFileReader } from "./CsvFileReader";
-import {  getNewNames, getCodeLists, makeCsv } from "./utils";
-import NewNameReturnType from "./utils";
+import {  getNewNames, getCodeLists, makeCsv, NewNameReturnType } from "./utils";
+
 
 async function processCsvData(filename1: string, filename2: string) {
   const csvFileReader1 = new CsvFileReader(filename1);
@@ -23,10 +23,12 @@ async function processCsvData(filename1: string, filename2: string) {
   }
 }
 
+
 async function processCsvNames(filename1: string, filename2: string) {
   const csvFileReader1 = new CsvFileReader(filename1);
   const csvFileReader2 = new CsvFileReader(filename2);
   let flag = true
+
 
   try {
     const curNames = await csvFileReader1.readNames('current');
@@ -35,10 +37,10 @@ async function processCsvNames(filename1: string, filename2: string) {
     // console.log('cur', curNames)
     if(flag) {
 
-      const newNamesList: NewNameReturnType[] = await getNewNames(newNames, curNames)
+      const newNamesList: NewNameReturnType[] = await getNewNames(curNames, newNames)
       console.log('add these ', newNamesList)
 
-      // makeCsv('test', newNamesList)
+      makeCsv('test', newNamesList)
     }
   } catch (error) {
     console.error('Error reading CSV file:', error);
@@ -46,10 +48,9 @@ async function processCsvNames(filename1: string, filename2: string) {
 
 }
 
-
 // processCsvNames('./CSV/CUR_DEST_NAMES.CSV', './CSV/SINCH_NAMES_ONLY.csv');
 
 
-processCsvNames('./CSV/TEST_FILES/SINCH_NAMES_1000.csv', './CSV/TEST_FILES/CUR_DEST_NAMES_1000.csv');
+processCsvNames('./CSV/CUR_DEST_NAMES.csv', './CSV/SINCH_NAMES_ONLY.csv');
 // const newNamesList = getNewNames(array1, array2)
 

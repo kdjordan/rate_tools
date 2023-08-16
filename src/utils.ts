@@ -2,7 +2,7 @@ const Papa = require('papaparse');
 import fs from 'fs'
 const { v4: uuidv4 } = require('uuid');
 
-type NewNameReturnType = [string, string, boolean, boolean, boolean]
+export type NewNameReturnType = [string, string, boolean, boolean, boolean]
 
 // export const getUpdateList = (oldList: any[][], newList: any[][]) => {
 //   let updateCodeList = []
@@ -42,12 +42,12 @@ export function getCodeLists(oldList: any[][], newList: any[][]) {
   return [codesToAdd, matchedCodes]
 }
 
-export function getNewNames(newList: string[][], curList: string[][]): Promise<NewNameReturnType[]> {
+export function getNewNames(curList: string[][], newList: string[][]): Promise<NewNameReturnType[]> {
 
-  const namesToAdd: string[][] = [];
+
 
   return new Promise((resolve, reject) => {
-
+    
     let namesToAdd: NewNameReturnType[] = [];
 
     if (!newList || !curList) {

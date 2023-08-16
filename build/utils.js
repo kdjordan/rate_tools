@@ -42,8 +42,7 @@ function getCodeLists(oldList, newList) {
     return [codesToAdd, matchedCodes];
 }
 exports.getCodeLists = getCodeLists;
-function getNewNames(newList, curList) {
-    const namesToAdd = [];
+function getNewNames(curList, newList) {
     return new Promise((resolve, reject) => {
         let namesToAdd = [];
         if (!newList || !curList) {
