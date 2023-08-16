@@ -40,25 +40,28 @@ export function getCodeLists(oldList: any[][], newList: any[][]) {
   return [codesToAdd, matchedCodes]
 }
 
-export function getNewNames(oldList: any[][], newList: any[][]) {
+export function getNewNames(newList: any[][], curList: any[][]) {
   let namesToAdd = []
-  for (const item1 of newList) {
-    const nameToCompare = item1[0];
-    let isFound = false;
-  
-    for (const item2 of oldList) {
-      if (item2[0].includes(nameToCompare)) {
-        isFound = true;
-        break;
-      }
-    }
-  
-    if (!isFound) {
-      namesToAdd.push(item1);
-    }
-  }
+  const namesMap = {};
 
-  return namesToAdd
+  console.log(newList)
+  console.log(curList)
+
+for (const curName of curList) {
+  namesMap[curName[0]] = true;
+}
+console.log(namesMap)
+const resultArray = [];
+
+for (const newName of newList) {
+  const nameToCompare = newName[0];
+  
+  if (!namesMap[nameToCompare]) {
+    resultArray.push(newName[0]);
+  }
+}
+
+console.log('***', resultArray);
   
 }
 
